@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                background-color: black;
+                color: white;
+                font-family: 'Arial', sans-serif;
+            }
+        </style>
+        <title>Digital Clock</title>
+    </head>
+
+    <body>
+        <div id="digitalClock"></div>
+
+        <script>
+            function updateTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const ampm = (hours >= 12) ? 'PM' : 'AM';
+
+                const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+                document.getElementById('digitalClock').textContent = timeString;
+
+                let r = getRandomNumber();
+                let g = getRandomNumber();
+                let b = getRandomNumber();
+
+                let myDiv = document.getElementById('digitalClock');
+
+                // Modify the style properties
+
+                document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                myDiv.style.color = 'white';
+                myDiv.style.fontSize = '100px';
+            }
+
+            function startClock() {
+                updateTime();
+                setInterval(updateTime, 1000); // Update every second
+            }
+
+            // Generate a random number between 0 and 255 (inclusive)
+            function getRandomNumber() {
+                return Math.floor(Math.random() * 256);
+            }
+
+            startClock();
+        </script>
+    </body>
+
+    </html>
+
+</body>
+
+</html>

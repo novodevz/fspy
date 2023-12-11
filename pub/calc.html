@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40vh;
+            margin: 0;
+        }
+
+        .centered-calc {
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        .input {
+            width: 240px;
+            height: 30px;
+            margin: 5px;
+            font-size: 20px;
+        }
+
+        .centered-calc button {
+            width: 50px;
+            height: 30px;
+            margin: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="centered-calc" onClick="onbuttonClick()">
+        <input id="dsp" value="0" style="text-align: right;" class="input"><br>
+        <button>√x</button>
+        <button>x²</button>
+        <button>mod</button>
+        <button>Ans</button><br>
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>+</button><br>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>-</button><br>
+        <button>3</button>
+        <button>2</button>
+        <button>1</button>
+        <button>x</button><br>
+        <button>C</button>
+        <button>0</button>
+        <button>=</button>
+        <button>/</button><br>
+    </div>
+
+    <script>
+        let opr = '';
+        let n1 = '';
+        let n2 = '';
+        let ans = '';
+
+        function isNumeric(str) {
+            return !isNaN(Number(str));
+        }
+
+        function onbuttonClick() {
+            let button = event.target.innerText;
+
+            // blocking respnsive background
+            if (event.target.tagName === 'BUTTON') {
+                // if clear ? reset calc
+                if (button === 'C') {
+                    dsp.value = '0';
+                    n1 = '';
+                    n2 = '';
+                    opr = '';
+                }
+                // if button is operator
+                if (!isNumeric(button) && !['Ans', 'C', '='].includes(button)) {
+                    opr = button;
+                    dsp.value = opr;
+                }
+                // if button is a number 
+                if (isNumeric(button)) {
+                    // avoiding leading 0
+                    if (dsp.value.startsWith('0')) {
+                        dsp.value = '';
+                    }
+
+                    dsp.value += button;
+                    let n = dsp.value;
+                    n = getNumFromStr(n);
+                    opr === '' ? n1 = n : n2 = n;
+
+                    // Log values for debugging
+                    console.log('n1:', n1);
+                    console.log('n2:', n2);
+                }
+                if (button === 'Ans') {
+                    dsp.value = ans;
+                    // assign ans to n1 or n2
+                    if (n1 === '') {
+                        n1 = ans;
+                        console.log('n1:', n1);
+                    } else {
+                        n2 = ans;
+                        console.log('n2:', n2);
+                    }
+
+                }
+                if (button === '=') {
+                    calc(opr);
+                    n1 = ans;
+                    n2 = '';
+                    opr = '';
+                }
+            }
+
+        }
+
+        function calc(opr) {
+            if (opr === '+') {
+                let res = n1 + n2;
+                dsp.value = res;
+                ans = res;
+                n1 = ans;
+                n2 = '';
+                opr = '';
+            } else if (opr === '-') {
+                let res = n1 - n2;
+                dsp.value = res;
+                ans = res;
+                n1 = ans;
+                n2 = '';
+                opr = '';
+            } else if (opr === 'x') {
+                let res = n1 * n2;
+                dsp.value = res;
+                ans = res;
+                n1 = ans;
+                n2 = '';
+                opr = '';
+            } else if (opr === '/') {
+                if (n2 === 0) {
+                    dsp.value = 'ERROR';
+                    n2 = '';
+                    opr = '';
+                } else if (n2 === '') {
+                    dsp.value = 0;
+                    n2 = '';
+                    opr = '';
+                } else {
+                    let res = n1 / n2;
+                    dsp.value = res;
+                    ans = res;
+                    n1 = ans;
+                    n2 = '';
+                    opr = '';
+                }
+
+            } else if (opr === '√x') {
+                let res = Math.sqrt(n1);
+                dsp.value = res;
+                ans = res;
+                n1 = ans;
+                n2 = '';
+                opr = '';
+            } else if (opr === 'x²') {
+                let res = Math.pow(n1, 2);
+                dsp.value = res;
+                ans = res;
+                n1 = ans;
+                n2 = '';
+                opr = '';
+            } else if (opr === 'mod') {
+                let res = n1 % n2;
+                dsp.value = res;
+                ans = res;
+                n1 = ans;
+                n2 = '';
+                opr = '';
+            }
+        }
+
+        function getNumFromStr(str) {
+            // Use a regular expression to match the numeric part of the string
+            const match = str.match(/\d+/);
+
+            // Check if a match is found
+            if (match) {
+                // Convert the matched string to a number
+                const number = parseInt(match[0], 10);
+                return number;
+            }
+
+            // Return null if no numeric value is found
+            return null;
+        }
+    </script>
+</body>
+
+</html>

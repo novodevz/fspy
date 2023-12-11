@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn"
+    style="position: absolute; top: 0; left: 0;
+    background-color: rgb(red, green, blue);"
+    onclick="move()">PingPong</button>
+
+    <script>
+        let toppx = 0;
+        let leftpx = 0;
+
+        let isGoingDown = true;
+        let isGoingRight = true;
+
+        const move = () => {
+            btn.style.backgroundColor =
+            `rgb(${toppx % 255}, ${(toppx ** 2) % 255}, ${(toppx / 2)% 255})`;
+
+            console.log(`rgb(${toppx % 255}, ${(toppx ** 2) % 255}, ${(toppx / 2)% 255})`)
+
+            if (toppx < window.innerHeight && isGoingDown) {
+                btn.style.top = `${toppx++}px`;
+            } else {
+                isGoingDown = false;
+                btn.style.top = `${toppx--}px`;
+            }
+
+            if (leftpx < window.innerWidth && isGoingRight) {
+                btn.style.left = `${leftpx++}px`;
+            } else {
+                isGoingRight = false;
+                btn.style.left = `${leftpx--}px`;
+            }
+
+            if (toppx === 0) {
+                isGoingDown = true;
+            }
+
+            if (leftpx === 0) {
+                isGoingRight = true;
+            }
+            
+            // console.log(toppx, leftpx);
+            setTimeout(move, 1);
+
+
+        }
+
+
+    </script>
+</body>
+
+</html>

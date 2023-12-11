@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperMarket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .products-container {
+            display: flex;
+            justify-content: center;
+            /* Adjust event property to control spacing */
+            flex-wrap: wrap;
+            margin: auto;
+            /* Center the container */
+        }
+
+        .productUnit {
+            width: 200px;
+            text-align: center;
+            /* Center the text within each product unit */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            /* Center the image within each product unit */
+        }
+
+        #price {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        #total {
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+
+        #addToCartBtn {
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+    <div class="products-container">
+
+        <div class="productUnit">
+            <div>Price: $<span id="oliveOilPriceSpanId">7</span></div>
+            <img
+                src="https://media.istockphoto.com/id/1273384785/vector/olive-oil-labels-collection-hand-drawn-vector-illustration-templates-for-olive-oil-packaging.jpg?s=612x612&w=is&k=20&c=fyUhaaVzXOjxcz35rXBuMTBu6dCG2CaDGB_6FKHJt24=">
+            <div onclick="calcTotalUnits(event)">
+                <button id="oliveOil">-</button>
+                <button id="oliveOil">+</button>
+                <div id="oliveOilTotal">Total:</div>
+            </div>
+
+        </div>
+
+        <div class="productUnit">
+            <div>Price: $<span id="applePriceSpanId">1</span> /unit</div>
+            <img
+                src="https://media.istockphoto.com/id/495878092/photo/red-apple.jpg?s=612x612&w=is&k=20&c=Sk_yWeuwtke-b-CSX6X9xs65e4PU2SstgabsCTXYXU8=">
+            <div onclick="calcTotalUnits(event)">
+                <button id="apple">-</button>
+                <button id="apple">+</button>
+                <div id="appleTotal">Total:</div>
+            </div>
+
+        </div>
+
+        <div class="productUnit">
+            <div>Price: $<span id="breadPriceSpanId">2</span></div>
+            <img
+                src="https://media.istockphoto.com/id/1477490308/photo/sliced-loaf-of-white-sourdough-bread-on-light-background.jpg?s=1024x1024&w=is&k=20&c=J71PseDNwGLSnfO9gbS-eW15vIxMMu6pp3kFwue2VNg=">
+            <div onclick="calcTotalUnits(event)">
+                <button id="bread">-</button>
+                <button id="bread">+</button>
+                <div id="breadTotal">Total:</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <h1>Shoping Cart</h1>
+    <button onclick="addToCart(event)">Add to Cart</button>
+
+    <div id="shopingCart" style="background-color: lightblue; padding: auto;"></div>
+
+    <script>
+        const SRV = 'http://localhost:3000/cart'
+
+        let cart = {};
+
+        let oliveOilCounter = 0;
+        let appleCounter = 0;
+        let breadCounter = 0;
+
+        calcTotalUnits = (event) => {
+            let productName = event.target.id;
+            let opr = event.target.innerHTML;
+
+            opr === '+' ? eval(`${productName + 'Counter'}++`)
+                : eval(`${productName + 'Counter'}`) === 0
+                    ? eval(`${productName + 'Counter'}`) = 0
+                    : eval(`${productName + 'Counter'}--`)
+
+            cart[productName] = eval(`${productName + 'Counter'}`);
+            console.log(cart);
+
+            // display total units per product
+            document.getElementById(`${productName + 'Total'}`).innerHTML =
+                `Total: ${eval(`${productName + 'Counter'}`)}`;
+
+        }
+
+        addToCart = (event) => {
+            axios.post(SRV, cart)
+                .then(function (response) {
+                    console.log(response);
+                    dspShopingCart();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        dspShopingCart = async () => {
+            try {
+                let response = await axios.get(SRV);
+                let cartData = response.data;
+                let crt = cartData[cartData.length - 1];
+
+                Object.entries(crt).forEach(([key, value]) => {
+                    if (key === 'id' || value === 0) {
+                        delete crt[key];
+                    } else {
+                        console.log(key, value);
+                    }
+                });
+
+                // oliveOilPriceSpanId
+
+                let totalCost = 0;
+                // calc total cost
+                Object.entries(crt).forEach(([key, value]) => {
+                    // console.log(key);
+                    // console.log(typeof key);
+                    // console.log(document.getElementById(`${key}PriceSpanId`).innerText);
+
+                    totalCost +=
+                    document.getElementById(`${key}PriceSpanId`).innerText * value;
+                });
+
+                let dsp = `
+            <ul>
+                ${Object.keys(crt).map(key => `<li style="text-align: left;"">${key}: ${crt[key]}</li>`
+                ).join('')}
+            </ul>
+
+            total cost: $${totalCost}
+        `;
+
+                document.getElementById('shopingCart').innerHTML = dsp;
+            } catch (error) {
+                console.error('Error fetching shopping cart:', error);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
