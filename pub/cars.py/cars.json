@@ -1,10 +1,5 @@
 [
   {
-    "brand": "kia",
-    "color": "red",
-    "model": "2009"
-  },
-  {
     "brand": "mazda",
     "color": "yellow",
     "model": "2023"
@@ -13,5 +8,20 @@
     "brand": "mazda",
     "color": "red",
     "model": "2011"
+  },
+  {
+    "brand": "kia",
+    "color": "red",
+    "model": "2011"
+  },
+  {
+    "brand": "kia",
+    "color": "blue",
+    "model": "2022"
+  },
+  {
+    "brand": "suzuki",
+    "color": "pink",
+    "model": "1988"
   }
 ]
